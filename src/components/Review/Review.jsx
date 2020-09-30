@@ -2,7 +2,6 @@ import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { getDatabaseCart, removeFromDatabaseCart, processOrder } from '../../utilities/databaseManager';
-import fakeData from '../../fakeData';
 import ReviewItem from '../ReviewItem/ReviewItem';
 import Cart from '../Cart/Cart';
 import happyImage from '../../images/giphy.gif'
@@ -13,7 +12,7 @@ const Review = () => {
   const [placeOrder, setPlaceOrder] = useState(false)
   const history = useHistory()
 
-//function for place order and showing thank you image
+  //function for place order and showing thank you image
   const handleProceedCheckout = () => {
     history.push('/shipment')
     // setCart([])
@@ -21,7 +20,7 @@ const Review = () => {
     // processOrder()
   }
 
-//for removing product from review order page
+  //for removing product from review order page
   const removeProduct = (productKey) => {
     console.log('clicked', productKey)
     const newCart = cart.filter(pd => pd.key !== productKey)
@@ -29,18 +28,22 @@ const Review = () => {
     removeFromDatabaseCart(productKey)
   }
 
-// useEffect for getting data from local storage and set quantity
+  // useEffect for getting data from local storage and set quantity
   useEffect(() => {
     const savedCart = getDatabaseCart()
-    // console.log(savedCart)
     const productKeys = Object.keys(savedCart)
 
-    const cartProducts = productKeys.map(key => {
-      const product = fakeData.find(pd => pd.key === key)
-      product.quantity = savedCart[key]
-      return product;
+    fetch('http://localhost:5000/productByKeys', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+      body: JSON.stringify(productKeys),
     })
-    setCart(cartProducts)
+      .then(res => res.json())
+      .then(data => {
+        setCart(data)
+      })
   }, [])
 
   //to showing place order image
