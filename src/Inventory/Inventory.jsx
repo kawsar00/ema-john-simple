@@ -5,7 +5,7 @@ import React from 'react';
 const Inventory = () => {
   const handleAddProduct = () => {
     const product = {}
-    fetch('http://localhost:5000/addProduct', {
+    fetch('https://stormy-coast-31865.herokuapp.com/addProduct', {
       method:'POST',
               headers: {
                 'Content-type': 'application/json; charset=UTF-8',

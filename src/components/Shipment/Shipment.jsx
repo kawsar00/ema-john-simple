@@ -12,7 +12,7 @@ const Shipment = () => {
     const savedCart = getDatabaseCart()
     const orderDetails = {...loggedInUser, products: savedCart, shipment: data, orderTime: new Date()}
 
-    fetch('http://localhost:5000/addOrder', {
+    fetch('https://stormy-coast-31865.herokuapp.com/addOrder', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',

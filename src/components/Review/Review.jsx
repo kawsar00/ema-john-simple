@@ -33,7 +33,7 @@ const Review = () => {
     const savedCart = getDatabaseCart()
     const productKeys = Object.keys(savedCart)
 
-    fetch('http://localhost:5000/productByKeys', {
+    fetch('https://stormy-coast-31865.herokuapp.com/productByKeys', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',

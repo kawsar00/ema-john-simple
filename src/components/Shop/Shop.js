@@ -11,7 +11,7 @@ const Shop = () => {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/products')
+    fetch('https://stormy-coast-31865.herokuapp.com/products')
     .then(res => res.json())
     .then(data => setProducts(data))
   }, [])
@@ -20,7 +20,7 @@ const Shop = () => {
     const savedCart = getDatabaseCart()
     const productKeys = Object.keys(savedCart)
     console.log(products, productKeys);
-    fetch('http://localhost:5000/productByKeys', {
+    fetch('https://stormy-coast-31865.herokuapp.com/productByKeys', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
