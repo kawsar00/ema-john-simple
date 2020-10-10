@@ -4,15 +4,28 @@ import { useForm } from 'react-hook-form';
 import { UserContext } from '../../App';
 import { getDatabaseCart, processOrder } from '../../utilities/databaseManager';
 import ProcessedPayment from '../ProcessedPayment/ProcessedPayment';
+import { useState } from 'react';
 
 
 const Shipment = () => {
   const [loggedInUser, setLoggedInUser] = useContext(UserContext)
   const { register, handleSubmit, watch, errors } = useForm();
+  const [shippingData, setShippingData] = useState(null)
   const onSubmit = data => {
     // console.log('form submitted',  data);
+    setShippingData(data)
+
+  }
+
+  const handlePaymentSuccess = paymentId => {
     const savedCart = getDatabaseCart()
-    const orderDetails = { ...loggedInUser, products: savedCart, shipment: data, orderTime: new Date() }
+    const orderDetails = { 
+      ...loggedInUser, 
+      products: savedCart, 
+      shipment: shippingData, 
+      paymentId,
+      orderTime: new Date() 
+    }
 
     fetch('https://stormy-coast-31865.herokuapp.com/addOrder', {
       method: 'POST',
@@ -25,17 +38,16 @@ const Shipment = () => {
       .then(data => {
         if (data) {
           processOrder()
-          alert('Your order placed successfully')
+          // alert('Your order placed successfully')
         }
       })
-
   }
 
   console.log(watch("example")); // watch input value by passing the name of it
 
   return (
       <div className="row">
-        <div className="col-md-6">
+        <div style={{display: shippingData ? 'none' : 'block'}} className="col-md-6">
           <form className="ship-form" onSubmit={handleSubmit(onSubmit)}>
             {/* <input name="example" defaultValue="test" ref={register} /> */}
 
@@ -53,9 +65,9 @@ const Shipment = () => {
             <input type="submit" />
           </form>
         </div>
-        <div className="col-md-6">
+        <div style={{display: shippingData ? 'block' : 'none'}}className="col-md-6">
           <h2>Please Pay to Checkout</h2>
-          <ProcessedPayment></ProcessedPayment>
+          <ProcessedPayment handlePayment={handlePaymentSuccess}></ProcessedPayment>
         </div>
       </div>
   );
